@@ -3,13 +3,19 @@ import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import moment from "moment";
+import Modal from "@material-ui/core/Modal";
+import Box from "@material-ui/core/Box";
+import QrReader from 'react-qr-reader'
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [date, setDate] = useState(moment().format('yyyy-MM-DD'));
+    const [qrModalOpen, setQrModalOpen] = useState(false);
+    const [qrResult, setQrResult] = useState('');
 
     // const confirmRegister = () => {
     //     if (username !== "" && password !== "" && confirmPassword !== "" && height > 0 && weight > 0 && height < 250 && weight < 250) {
@@ -28,6 +34,19 @@ const SignUp = () => {
     const handleDateChange = (newValue) => {
         setDate(newValue);
     };
+
+    const handleScan = (data) => {
+        if (data) {
+            setQrResult(data);
+            setQrModalOpen(false);
+        }
+    }
+
+    const handleError = (err) => {
+        console.error(err)
+    }
+
+
 
     return (
         <Grid
@@ -90,18 +109,67 @@ const SignUp = () => {
                             label="Home address"
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            // onChange={this.changeUsernameHandler}
-                            helperText="Enter your SNI number or use your QR code to auto-fill the field"
-                            autoComplete="number"
-                            name="sni"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="sni"
-                            label="SNI Number"
-                        />
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="space-evenly"
+                        alignItems="center"
+                    >
+                        <Grid item xs={8} style={{margin: '2%'}}>
+                            <TextField
+                                onChange={event => setQrResult(event.target.value)}
+                                autoComplete="number"
+                                name="sni"
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="sni"
+                                value={qrResult}
+                                label="SNI Number"
+                            />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Button variant="outline-secondary" onClick={() => setQrModalOpen(true)}>
+                                <QrCodeScannerIcon />
+                            </Button>
+                            <Modal
+                                open={qrModalOpen}
+                                onClose={() => setQrModalOpen(false)}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            width: 500,
+                                            height: 600,
+                                            color: "black",
+                                            backgroundColor: 'whitesmoke',
+                                            border: '2px solid whitesmoke',
+                                            boxShadow: 24,
+                                            p: 4}}>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        justifyContent="space-around"
+                                        alignItems="center"
+                                        style={{height:"100%"}}
+                                    >
+                                        <QrReader
+                                            delay={300}
+                                            onError={(err) => handleError(err)}
+                                            onScan={(result) => handleScan(result)}
+                                            style={{ width: '100%' }}
+                                        />
+                                        <Button variant="outline-secondary" onClick={() => setQrModalOpen(false)}>
+                                            Close
+                                        </Button>
+                                    </Grid>
+                                </Box>
+                            </Modal>
+                        </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -139,10 +207,8 @@ const SignUp = () => {
                 </Grid>
                 <Grid container justifyContent="flex-end">
                     <Grid item>
-                        <Link
-                              variant="body2"
-                              style={{color:'orange'}} to={"/"}>
-                            Vous avez déjà un compte ? Connectez-vous
+                        <Link to={"/"}>
+                            You already have an account ? Login !
                         </Link>
                     </Grid>
                 </Grid>
