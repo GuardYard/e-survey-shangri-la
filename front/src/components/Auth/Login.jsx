@@ -27,7 +27,7 @@ const Login = () => {
     // }
 
     return (
-        <div style={{border:'1px red solid', height:'100%'}}>
+        <div>
             <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
@@ -38,10 +38,16 @@ const Login = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                    Login
-                </Button>
+                <Link style={{color:'whitesmoke'}} to={"/signup"}>
+                    <Button variant="primary">
+                        Login
+                    </Button>
+                </Link>
             </Form>
+            <br />
+            <Link style={{color:'whitesmoke'}} to={"/signup"}>
+                You don't have an account ? Sign Up !
+            </Link>
         </div>
     )
 }
