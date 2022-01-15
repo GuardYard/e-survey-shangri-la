@@ -1,19 +1,28 @@
 import React, {useEffect, useState} from "react";
-import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import SignUp from "./components/Auth/SignUp";
 import Login from "./components/Auth/Login.jsx";
-import {Container, Row} from "react-bootstrap";
 import Grid from "@mui/material/Grid";
+import {getUserById} from "./helpers/userHelpers";
+import AdminDash from "./components/AdminDash/AdminDash";
+import UserDash from "./components/UserDash/UserDash";
+import PageNotFound from "./components/404/PageNotFound";
 
 function App() {
     const [userConnected, setUserConnected] = useState(false)
+    const [userStatus, setUserStatus] = useState(false)
 
     useEffect(() => {
         const currentUserId = (localStorage.getItem("id") !== "") ? localStorage.getItem("id") : null;
         setUserConnected(currentUserId !== null && currentUserId !== undefined);
         console.log(currentUserId)
+        if(currentUserId){
+            getUserById(currentUserId).then(async res => {
+                setUserStatus(res.data.admin)
+            })
+        }
+        console.log(userStatus)
         console.log(document.location);
     }, [])
 
@@ -39,8 +48,7 @@ function App() {
                                 direction="column"
                                 justifyContent="space-evenly"
                                 alignItems="center"
-                                style={{height:'90%', width:'90%'}}
-                            >
+                                style={{height:'90%', width:'90%'}}>
                                 <h1>e-Survey Shangry-la</h1>
                                 <Routes>
                                     <Route path="/" exact element={<Login />}/>
@@ -48,18 +56,33 @@ function App() {
                                 </Routes>
                             </Grid>
                         ) : (
-                            <Routes>
-                                {/*<Route path="/" exact component={DisplayPost} />*/}
-                                {/*<Route path="/addPost" component={AddSocialPost} />*/}
-                                {/*<Route path="/receipes" component={MyReceipes} />*/}
-                                {/*<Route path="/addReceipe" component={AddReceipe} />*/}
-                                {/*<Route path="/receipe/:id" exact component={Receipe} />*/}
-                                {/*<Route path="/receipe/update/:id" component={UpdateReceipe} />*/}
-                                {/*<Route path="/trainings" component={MyTrainings} />*/}
-                                {/*<Route path="/training/:id" component={Training} />*/}
-                                {/*<Route path="/do_exercise/:id" component={DoExercise} />*/}
-                                {/*<Route path="/account" component={Profile} />*/}
-                            </Routes>
+                            userStatus ?
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="space-evenly"
+                                    alignItems="center"
+                                    style={{height:'90%', width:'90%'}}
+                                >
+                                    <h1>e-Survey Shangry-la</h1>
+                                    <Routes>
+                                        <Route path="/" exact element={<AdminDash />}/>
+                                    </Routes>
+                                </Grid>
+                                :
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="space-evenly"
+                                    alignItems="center"
+                                    style={{height:'90%', width:'90%'}}
+                                >
+                                    <h1>e-Survey Shangry-la</h1>
+                                    <Routes>
+                                        <Route path="/" exact element={<UserDash />}/>
+                                        <Route path="*" element={<PageNotFound />} />
+                                    </Routes>
+                                </Grid>
                         )}
                     </Router>
             </Grid>

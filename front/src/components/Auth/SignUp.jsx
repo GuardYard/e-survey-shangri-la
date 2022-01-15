@@ -8,28 +8,52 @@ import moment from "moment";
 import Modal from "@material-ui/core/Modal";
 import Box from "@material-ui/core/Box";
 import QrReader from 'react-qr-reader'
+import { register } from "../../helpers/authHelpers";
 
 const SignUp = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [fullname, setFullname] = useState('');
+    const [date, setDate] = useState(moment().format('yyyy-MM-DD'));
+    const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [date, setDate] = useState(moment().format('yyyy-MM-DD'));
     const [qrModalOpen, setQrModalOpen] = useState(false);
-    const [qrResult, setQrResult] = useState('');
+    const [qrResult, setQrResult] = useState(''); //SNI
 
-    // const confirmRegister = () => {
-    //     if (username !== "" && password !== "" && confirmPassword !== "" && height > 0 && weight > 0 && height < 250 && weight < 250) {
-    //         if (password === confirmPassword) {
-    //             register(username, password, height, weight).then(r => {
-    //                 document.location.href = "/login";
-    //             })
-    //         } else {
-    //             alert("You didn't confirm your password !");
-    //         }
-    //     } else {
-    //         alert("Your filled data are incorrect");
-    //     }
-    // }
+    const confirmRegister = () => {
+        if (email !== "" && fullname !== "" && address !== "" && qrResult.length === 8 && qrResult !== "" && date !== moment().format('yyyy-MM-DD') && password !== "" && confirmPassword !== "") {
+            if (password === confirmPassword) {
+                console.log(qrResult);
+                register(email, fullname, date, address, qrResult, password).then(r => {
+                    document.location.href = "/";
+                })
+            } else {
+                alert("You didn't confirm your password !");
+            }
+        } else if(email === ""){
+            alert("Please fill the email section");
+        } else if(fullname === ""){
+            alert("Please fill the name section");
+        } else if(address === ""){
+            alert("Please fill the address section");
+        } else if(qrResult.length !== 8 || qrResult === ""){
+            if(qrResult.length < 8){
+                alert("Your SNI should have at least 6 characters. It's too short");
+            } else if(qrResult.length > 8){
+                alert("Your SNI should have at least 6 characters. It's too long");
+            }
+        } else if(password === ""){
+            alert("Please fill the password section");
+        } else if(confirmPassword === ""){
+            alert("Please confirm the sentence");
+        } else if(date === moment().format('yyyy-MM-DD')){
+            alert("Please enter the date section properly (the current day is today)");
+        } else if(password !== confirmPassword){
+            alert("The password and his confirmation are not the same");
+        } else {
+            alert("Your filled data are incorrect");
+        }
+    }
 
     const handleDateChange = (newValue) => {
         setDate(newValue);
@@ -60,24 +84,24 @@ const SignUp = () => {
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <TextField
-                            // onChange={this.changeEmailHandler}
                             variant="outlined"
                             required
                             fullWidth
                             id="email"
                             label="Enter your email"
                             name="email"
+                            onChange={event => setEmail(event.target.value)}
                             autoComplete="email"
                             autoFocus
                         />
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            // onChange={this.changeUsernameHandler}
                             autoComplete="fname"
                             name="fullname"
                             variant="outlined"
                             required
+                            onChange={event => setFullname(event.target.value)}
                             fullWidth
                             id="fullname"
                             label="NAME Firstname"
@@ -99,10 +123,10 @@ const SignUp = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            // onChange={this.changeUsernameHandler}
                             autoComplete="address"
                             name="homeaddress"
                             variant="outlined"
+                            onChange={event => setAddress(event.target.value)}
                             required
                             fullWidth
                             id="homeaddress"
@@ -173,10 +197,10 @@ const SignUp = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            // onChange={this.changePasswordHandler}
                             variant="outlined"
                             required
                             fullWidth
+                            onChange={event => setPassword(event.target.value)}
                             name="password"
                             label="Password"
                             type="password"
@@ -186,10 +210,10 @@ const SignUp = () => {
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
-                            // onChange={this.changeConfirmPasswordHandler}
                             variant="outlined"
                             required
                             fullWidth
+                            onChange={event => setConfirmPassword(event.target.value)}
                             name="confirm-password"
                             label="Confirm your password"
                             type="password"
@@ -201,7 +225,7 @@ const SignUp = () => {
                        direction="column"
                        justifyContent="center"
                        alignItems="center">
-                        <Button variant="primary">
+                        <Button onClick={confirmRegister} variant="primary">
                             Submit
                         </Button>
                 </Grid>

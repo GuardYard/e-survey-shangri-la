@@ -22,6 +22,10 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-
+const userRoutes = require('./routes/users')
+const authRoutes = require('./routes/authentification')
+//
+app.use('/', authRoutes);
+app.use('/users', userRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
