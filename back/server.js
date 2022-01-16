@@ -24,8 +24,17 @@ app.use(express.json());
 //routes
 const userRoutes = require('./routes/users')
 const authRoutes = require('./routes/authentification')
+const questionsRoutes = require('./routes/questionSet')
+const questionRoutes = require('./routes/question')
+const answerRoutes = require('./routes/answer')
+const UserAnswerRoutes = require('./routes/userAnswer')
+
 //
 app.use('/', authRoutes);
 app.use('/users', userRoutes);
+app.use('/questions', questionsRoutes);
+app.use('/question', questionRoutes);
+app.use('/answer', answerRoutes);
+app.use('/respond', UserAnswerRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

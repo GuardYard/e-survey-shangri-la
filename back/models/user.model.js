@@ -42,12 +42,10 @@ const UserSchema = new Schema({
         type: Boolean,
         required: true,
         },
-    answers: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Answer"
-        }
-    ],
+    answers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'UserAnswer'
+    }],
 }, {
     timestamps: true,
 });

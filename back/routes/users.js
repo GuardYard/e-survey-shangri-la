@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 // @route GET user by Id --> /users/:id
 router.get('/:id', (req, res) => {
-    User.findById(req.params.id)
+    User.findById(req.params.id).populate('answers')
         .then(user => res.json(user))
         .catch(err => res.status(404).json({ Error: err, nousersfound: 'No Users found' }));
 });

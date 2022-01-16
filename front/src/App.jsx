@@ -16,14 +16,11 @@ function App() {
     useEffect(() => {
         const currentUserId = (localStorage.getItem("id") !== "") ? localStorage.getItem("id") : null;
         setUserConnected(currentUserId !== null && currentUserId !== undefined);
-        console.log(currentUserId)
         if(currentUserId){
             getUserById(currentUserId).then(async res => {
                 setUserStatus(res.data.admin)
             })
         }
-        console.log(userStatus)
-        console.log(document.location);
     }, [])
 
     return (
@@ -53,6 +50,7 @@ function App() {
                                 <Routes>
                                     <Route path="/" exact element={<Login />}/>
                                     <Route path="/signup" element={<SignUp />} />
+                                    <Route path="*" element={<PageNotFound />} />
                                 </Routes>
                             </Grid>
                         ) : (
@@ -67,6 +65,7 @@ function App() {
                                     <h1>e-Survey Shangry-la</h1>
                                     <Routes>
                                         <Route path="/" exact element={<AdminDash />}/>
+                                        <Route path="*" element={<PageNotFound />} />
                                     </Routes>
                                 </Grid>
                                 :

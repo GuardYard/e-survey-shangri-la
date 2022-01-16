@@ -17,7 +17,7 @@ const Login = () => {
                     localStorage.setItem("id", res.data.id);
                     document.location.href = "/";
                 } else {
-                    localStorage.removeItem("id")
+                    localStorage.removeItem("id");
                     alert("Username or password may be wrong !");
                 }
             }).catch(err => {

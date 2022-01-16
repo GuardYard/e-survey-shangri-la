@@ -20,11 +20,19 @@ const SignUp = () => {
     const [qrModalOpen, setQrModalOpen] = useState(false);
     const [qrResult, setQrResult] = useState(''); //SNI
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const confirmRegister = () => {
-        if (email !== "" && fullname !== "" && address !== "" && qrResult.length === 8 && qrResult !== "" && date !== moment().format('yyyy-MM-DD') && password !== "" && confirmPassword !== "") {
+        if (email !== "" && validateEmail(email) && fullname !== "" && fullname.length > 3 && address !== "" && qrResult.length === 8 && qrResult !== "" && date !== moment().format('yyyy-MM-DD') && password !== "" && password.length > 3 && confirmPassword !== "") {
             if (password === confirmPassword) {
                 console.log(qrResult);
-                register(email, fullname, date, address, qrResult, password).then(r => {
+                register(email.toLowerCase(), fullname, date, address, qrResult.toUpperCase(), password).then(r => {
                     document.location.href = "/";
                 })
             } else {
@@ -32,7 +40,9 @@ const SignUp = () => {
             }
         } else if(email === ""){
             alert("Please fill the email section");
-        } else if(fullname === ""){
+        } else if(!validateEmail(email)){
+            alert("The email entered is not in the right format");
+        } else if(fullname === "" || fullname.length <= 3){
             alert("Please fill the name section");
         } else if(address === ""){
             alert("Please fill the address section");
@@ -42,7 +52,7 @@ const SignUp = () => {
             } else if(qrResult.length > 8){
                 alert("Your SNI should have at least 6 characters. It's too long");
             }
-        } else if(password === ""){
+        } else if(password === "" || password.length <= 3){
             alert("Please fill the password section");
         } else if(confirmPassword === ""){
             alert("Please confirm the sentence");
