@@ -50,7 +50,7 @@ router.get('/GetQuestionResponse/:id', (req, res) => {
 router.get('/GetAllQuestions/', (req, res) => {
     let resQuestions = {Question: []};
     let id = 1;
-        Question.find().then(questions => {
+        Quecdstion.find().then(questions => {
             questions.map(question => {
                 resQuestions.Question.push({id:id.toString(), Text:question.question})
                 id+=1;
