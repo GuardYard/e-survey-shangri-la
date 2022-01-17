@@ -1,26 +1,42 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import {Typography} from "@mui/material";
 import Grid from "@material-ui/core/Grid";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import {AddOutlined, DeleteForever} from "@mui/icons-material";
+import {AddOutlined, DeleteForever, QueryStatsOutlined} from "@mui/icons-material";
 import Modal from "@material-ui/core/Modal";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
-import {deleteQuestionById, updateQuestionTitle} from "../../helpers/questionHelper";
+import {deleteQuestionById, getQuestionStat, updateQuestionTitle} from "../../helpers/questionHelper";
 import EditAnswer from "./EditAnswer";
 import {createNewAnswer} from "../../helpers/answerHelper";
+import AnswerStat from "./AnswerStat";
+import Loading from "../404/Loading";
 
 const EditQuestion = (props) => {
     const question = props.question;
     const users = props.users;
+    const [questionStat, setQuestionStat] = useState({});
+    const [questionStatTotal, setQuestionStatTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalStat, setModalStat] = useState(false);
     const [modalQuestionOpen, setModalQuestionOpen] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [modalAnswerOpen, setModalAnswerOpen] = React.useState(false);
     const [newQuestionTitle, setNewQuestionTitle] = React.useState('');
     const [newAnswerTitle, setNewAnswerTitle] = React.useState('');
+
+    useEffect(() => {
+        if(question._id){
+            getQuestionStat(question._id).then(async res => {
+                await setQuestionStat(res.data);
+            })
+        }
+        setIsLoading(false);
+        console.log(questionStat)
+    }, [])
 
     const handleSubmitTitle = () => {
         if(newQuestionTitle !== "" && newQuestionTitle.length < 1000 && newQuestionTitle.length > 10){
@@ -86,6 +102,64 @@ const EditQuestion = (props) => {
                       }}>
                     <EditOutlinedIcon />
                 </Button>
+                <Button
+                        key={question._id}
+                        size="large"
+                        color="primary"
+                        onClick={() => {
+                            getQuestionStat(question._id).then(async res => {
+                                await setQuestionStat(res.data);
+                            })
+                            setModalStat(true)
+                        }}
+                >
+                    <QueryStatsOutlined />
+                </Button>
+                {!isLoading && questionStat !== undefined ?
+                    <Modal
+                    open={modalStat}
+                    onClose={() => setModalStat(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        height: 400,
+                        color: "black",
+                        backgroundColor: 'whitesmoke',
+                        border: '2px solid whitesmoke',
+                        boxShadow: 24,
+                        p: 4
+                    }}>
+                        {questionStat.Answers !== undefined ?
+                            <Grid
+                            container
+                            direction="column"
+                            justifyContent="space-evenly"
+                            alignItems="center"
+                            style={{height: "100%", width: "100%", maxHeight: "20em", overflow: 'auto'}}
+                        >
+                            <Typography>Answer Stats: {question.question}</Typography>
+                            {
+                                questionStat.Answers.map(answer => (
+                                    <AnswerStat Aid={answer.id} count={answer.count}/>
+                                ))
+                            }
+                            <Button onClick={() => setModalStat(false)}>
+                                Close stats
+                            </Button>
+                        </Grid>
+                        :
+                        <Loading/>
+                        }
+                    </Box>
+                </Modal>
+                : <Loading/>
+                }
             </Typography>
             <Grid
                 container

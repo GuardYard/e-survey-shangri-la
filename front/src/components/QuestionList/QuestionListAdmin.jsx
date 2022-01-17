@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Grid from "@material-ui/core/Grid";
 import {getAllUsers, getUserById} from "../../helpers/userHelpers";
 import Loading from "../404/Loading";
-import {addQuestions, getAllQuestions, updateQuestionTitle} from "../../helpers/questionHelper";
+import {addQuestions, getAllQuestions, getQuestionStat, updateQuestionTitle} from "../../helpers/questionHelper";
 import EditQuestion from "./EditQuestion";
 import {Button, Typography} from "@mui/material";
 import {AddOutlined} from "@mui/icons-material";
@@ -118,7 +118,7 @@ const QuestionListAdmin = () => {
                     alignItems="flex-start"
                     style={{height: '85%', color: '#343a40', overflow: 'auto'}}>
                     {questions.map(question =>(
-                        <EditQuestion key={question._id} users={users} question={question}/>
+                        <EditQuestion key={question._id}  users={users} question={question}/>
                     ))}
                 </Grid>)
             }

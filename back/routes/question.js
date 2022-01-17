@@ -36,6 +36,36 @@ router.post('/', (req, res) => {
         .catch(err => res.status(400).json({ error: 'Unable to add this question' }));
 });
 
+router.get('/stat/:id', (req, res) => {
+    let response = {Question: req.params.id, Answers:[]};
+    User.find().populate('answers').then(users => {
+        Question.findById(req.params.id).populate('answerOptions').then(question => {
+            question.answerOptions.map(questionAnswer => {
+                response.Answers.push({id:questionAnswer.optionNumber.toString(), count:0})
+            })
+            users.map(user => {
+                user.answers.map(answer => {
+                    response.Answers.map(QuestionAnswer => {
+                        // console.log(answer.questionAnswer.toString());
+                        // console.log(QuestionAnswer.id);
+                        // console.log(answer.questionId.valueOf());
+                        // console.log(req.params.id);
+                        if(answer.questionId.valueOf() === req.params.id){
+                            if(answer.questionAnswer.toString() === QuestionAnswer.id){
+                                QuestionAnswer.count += 1;
+                            }
+                        }
+                    })
+                })
+            })
+            res.json(response)
+        })
+    })
+    // Question.findById(req.params.id).populate('answerOptions')
+    //     .then(question => res.json(question))
+    //     .catch(err => res.status(404).json({ noquestionfound: 'No question found' }));
+});
+
 router.delete('/:id', (req, res) => {
     Question.findByIdAndDelete(req.params.id)
         .then(question => {
