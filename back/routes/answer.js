@@ -20,7 +20,7 @@ router.put('/titleUpdate', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     Answer.findByIdAndDelete(req.params.id)
-        .then(answer => Question.findByIdAndUpdate(answer.questionSetId, { $pull: { answerOptions: answer.id }}))
+        .then(answer => Question.findByIdAndUpdate(answer.questionId, { $pull: { answerOptions: answer.id }}))
         .then(answer => res.json({ mgs: 'Answer entry deleted successfully' }))
         .catch(err => res.status(404).json({ error: 'No such a answer' }));
 });

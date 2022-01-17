@@ -5,7 +5,7 @@ const User = require('../models/user.model');
 
 // @route GET all users --> /users/
 router.get('/', (req, res) => {
-    User.find()
+    User.find().populate('answers')
         .then(users => res.json(users))
         .catch(err => res.status(404).json({ Error: err, nousersfound: 'No Users found' }));
 });

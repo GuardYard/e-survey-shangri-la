@@ -6,6 +6,10 @@ export const getAllQuestions = () => {
     return axios.get(QUESTION_API_BASE_URL);
 }
 
+export const addQuestions = (question) => {
+    return axios.post(QUESTION_API_BASE_URL, { question:question, answerOptions:[], questionSetId: "61e4622f083f857bc4bfa8df"});
+}
+
 export const getQuestionsById = (questionId) => {
     return axios.get(QUESTION_API_BASE_URL + questionId);
 }
