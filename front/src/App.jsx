@@ -60,7 +60,7 @@ function App() {
                                     direction="column"
                                     justifyContent="space-evenly"
                                     alignItems="center"
-                                    style={{height:'90%', width:'90%'}}
+                                    style={{height:'90%', width:'70%'}}
                                 >
                                     <h1>e-Survey Shangry-la</h1>
                                     <Routes>
@@ -74,7 +74,7 @@ function App() {
                                     direction="column"
                                     justifyContent="space-evenly"
                                     alignItems="center"
-                                    style={{height:'90%', width:'90%'}}
+                                    style={{height:'90%', width:'70%'}}
                                 >
                                     <h1>e-Survey Shangry-la</h1>
                                     <Routes>

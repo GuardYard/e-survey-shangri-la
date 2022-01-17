@@ -12,7 +12,7 @@ const UserDash = () => {
                 direction="row"
                 justifyContent="space-around"
                 alignItems="center"
-                style={{height: '90%', color: '#343a40', border:'1px solid black'}}>
+                style={{height: '90%', color: '#343a40'}}>
                 <h2>Questions : </h2>
                 <QuestionList />
             </Grid>

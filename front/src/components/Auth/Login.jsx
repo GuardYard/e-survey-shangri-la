@@ -7,12 +7,17 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const auth = () => {
-        if (email !== "" && password !== "") {
-            console.log(email);
-            console.log(password);
+        if (email !== "" && validateEmail(email) && password !== "") {
             authenticate(email, password).then(res => {
-                console.log(res);
                 if (res.data.id !== undefined) {
                     localStorage.setItem("id", res.data.id);
                     document.location.href = "/";
@@ -23,10 +28,12 @@ const Login = () => {
             }).catch(err => {
                 console.error("Erreur requete " + err.message + " " + err.stack)
             })
-        }else if(password === "" && email === ""){
+        }else if(password === "" && email === "" && !validateEmail(email)){
             alert("Please fill all the fields !");
         }else if(email === ""){
-            alert("Username is empty !");
+            alert("Email is empty !");
+        }else if(!validateEmail(email)){
+            alert("Your email is not in the correct format !");
         }else if(password === ""){
             alert("Password is empty !");
         }else{
