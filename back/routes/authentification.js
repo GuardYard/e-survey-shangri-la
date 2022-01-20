@@ -29,14 +29,16 @@ router.get('/GetQuestionResponse/:id', (req, res) => {
     User.find().populate('answers').then(users => {
         Question.find().populate('answerOptions').then(question => {
             question[req.params.id-1].answerOptions.map(questionAnswer => {
-                response.Answers.push({id:questionAnswer.optionNumber.toString(), count:0})
+                response.Answers.push({id:questionAnswer.optionNumber.toString(), count:"0"})
             })
             users.map(user => {
                 user.answers.map(answer => {
                     response.Answers.map(QuestionAnswer => {
                         if(answer.questionId.valueOf() === question[req.params.id-1].id){
                             if(answer.questionAnswer.toString() === QuestionAnswer.id){
+                                QuestionAnswer.count = parseInt(QuestionAnswer.count);
                                 QuestionAnswer.count += 1;
+                                QuestionAnswer.count = QuestionAnswer.count.toString()
                             }
                         }
                     })
@@ -48,11 +50,11 @@ router.get('/GetQuestionResponse/:id', (req, res) => {
 });
 
 router.get('/GetAllQuestions/', (req, res) => {
-    let resQuestions = {Question: []};
+    let resQuestions = {Questions: []};
     let id = 1;
         Question.find().then(questions => {
             questions.map(question => {
-                resQuestions.Question.push({id:id.toString(), Text:question.question})
+                resQuestions.Questions.push({id:id.toString(), Text:question.question})
                 id+=1;
             })
             let response = {consulations: resQuestions};
